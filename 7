@@ -1,406 +1,195 @@
-<!DOCTYPE html>
+App.js
 
-<html lang="en">
+import React from 'react';
 
-<head>
+import ProfileCard from './ProfileCard';
 
- <meta charset="UTF-8">
+function App() {
 
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
+return (
 
- <title>JSON/CSV Converter and Hash Generator</title>
+<div className="App">
 
- <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+<h1 style={{ textAlign: 'center', marginTop: '20px' }}>User Profile</h1>
 
- <style>
+<ProfileCard
 
- body {
+name="John Doe"
 
- font-family: Arial, sans-serif;
+bio="A passionate developer with a love for learning and coding."
 
- line-height: 1.6;
+profilePicture="https://upload.wikimedia.org/wikipedia/commons/4/45/John_H
 
- margin: 0;
+ealey_Official_Cabinet_Portrait%2C_July_2024_%28cropped%29_2.jpg"
 
- padding: 20px;
+backgroundColor="pink"
 
- background-color: #f4f4f4;
+/>
 
- }
+</div>
 
- .container {
-
- max-width: 800px;
-
- margin: auto;
-
- background: white;
-
- padding: 20px;
-
- border-radius: 5px;
-
- box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
- h1 {
-
- color: #333;
-
- }
-
- textarea {
-
- width: 100%;
-
- height: 100px;
-
- margin-bottom: 10px;
-
- }
-
- button {
-
- background-color: #4CAF50;
-
- color: white;
-
- padding: 10px 15px;
-
- border: none;
-
- border-radius: 4px;
-
- cursor: pointer;
-
- margin-right: 10px;
-
- }
-
- button:hover {
-
- background-color: #45a049;
-
- }
-
- #result {
-
-margin-top: 20px;
-
- padding: 10px;
-
- background-color: #e7e7e7;
-
- border-radius: 4px;
-
- }
-
- </style>
-
-</head>
-
-<body>
-
- <div class="container">
-
- <h1>JSON/CSV Converter and Hash Generator</h1>
-
- <h2>a) Convert JSON to JavaScript Object</h2>
-
- <textarea id="jsonInput" placeholder="Enter JSON here"></textarea>
-
- <button onclick="convertJsonToObject()">Convert to Object</button>
-
- <h2>b) Convert JSON to Date</h2>
-
- <textarea id="jsonDateInput" placeholder='Enter JSON date string (e.g., {"date": "2023-05-
-
-15T12:00:00Z"})'></textarea>
-
- <button onclick="convertJsonToDate()">Convert to Date</button>
-
- <h2>c) Convert JSON to CSV and CSV to JSON</h2>
-
- <textarea id="dataInput" placeholder="Enter JSON or CSV here"></textarea>
-
- <button onclick="convertJsonToCsv()">JSON to CSV</button>
-
- <button onclick="convertCsvToJson()">CSV to JSON</button>
-
- <h2>d) Create Hash from String</h2>
-
- <textarea id="hashInput" placeholder="Enter string to hash"></textarea>
-
- <button onclick="createHash()">Generate Hash</button>
-<div id="result"></div>
-
- </div>
-
- <script>
-
- function convertJsonToObject() {
-
- try {
-
- const jsonInput = document.getElementById('jsonInput').value;
-
- const jsObject = JSON.parse(jsonInput);
-
- document.getElementById('result').innerText = 'Converted Object: ' +
-
-JSON.stringify(jsObject, null, 2);
-
- } catch (error) {
-
- document.getElementById('result').innerText = 'Error: ' + error.message;
-
- }
-
- }
-
- function convertJsonToDate() {
-
- try {
-
- const jsonInput = document.getElementById('jsonDateInput').value;
-
- const jsObject = JSON.parse(jsonInput);
-
- const date = new Date(jsObject.date);
-
- document.getElementById('result').innerText = 'Converted Date: ' + date.toString();
-
- } catch (error) {
-
- document.getElementById('result').innerText = 'Error: ' + error.message;
+);
 
 }
 
- }
+export default App;
 
- function convertJsonToCsv() {
+App.css
 
- try {
+.app {
+display: flex;
 
- const jsonInput = document.getElementById('dataInput').value;
+justify-content: center;
 
- const jsObject = JSON.parse(jsonInput);
+align-items: center;
 
- const headers = Object.keys(jsObject[0]);
+height: 100vh;
 
- const csvRows = [
-
- headers.join(','),
-
- ...jsObject.map(row => headers.map(fieldName =>
-
-JSON.stringify(row[fieldName])).join(','))
-
- ];
-
- const csvString = csvRows.join('\n');
-
- document.getElementById('result').innerText = 'Converted CSV:\n' + csvString;
-
- } catch (error) {
-
- document.getElementById('result').innerText = 'Error: ' + error.message;
-
- }}
-
- function convertCsvToJson() {
-
- try {
-
- const csvInput = document.getElementById('dataInput').value;
-
- const lines = csvInput.split('\n');
-
- const headers = lines[0].split(',');
-
- const jsonArray = lines.slice(1).map(line => {
-
- const values = line.split(',');
-
- return headers.reduce((obj, header, index) => {
-<div id="result"></div>
-
- </div>
-
- <script>
-
- function convertJsonToObject() {
-
- try {
-
- const jsonInput = document.getElementById('jsonInput').value;
-
- const jsObject = JSON.parse(jsonInput);
-
- document.getElementById('result').innerText = 'Converted Object: ' +
-
-JSON.stringify(jsObject, null, 2);
-
- } catch (error) {
-
- document.getElementById('result').innerText = 'Error: ' + error.message;
-
- }
-
- }
-
- function convertJsonToDate() {
-
- try {
-
- const jsonInput = document.getElementById('jsonDateInput').value;
-
- const jsObject = JSON.parse(jsonInput);
-
- const date = new Date(jsObject.date);
-
- document.getElementById('result').innerText = 'Converted Date: ' + date.toString();
-
- } catch (error) {
-
- document.getElementById('result').innerText = 'Error: ' + error.message;
+background-color: #f0f0f0;
 
 }
 
- }
+ProfileCard.js
 
- function convertJsonToCsv() {
+import React, { useState } from 'react';
 
- try {
+import './ProfileCard.css'; // Import external CSS file for overall styles
 
- const jsonInput = document.getElementById('dataInput').value;
+const ProfileCard = ({ name, bio, profilePicture, backgroundColor }) => {
 
- const jsObject = JSON.parse(jsonInput);
+const inlineStyles = {
 
- const headers = Object.keys(jsObject[0]);
+backgroundColor: backgroundColor || '#f0f0f0',
 
- const csvRows = [
+prop passed
 
- headers.join(','),
+textAlign: 'center',
 
- ...jsObject.map(row => headers.map(fieldName =>
+padding: '20px',
 
-JSON.stringify(row[fieldName])).join(','))
+borderRadius: '8px',
 
- ];
+boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
 
- const csvString = csvRows.join('\n');
+transition: 'background-color 0.3s ease',
 
- document.getElementById('result').innerText = 'Converted CSV:\n' + csvString;
+};
 
- } catch (error) {
+const [isHovered, setIsHovered] = useState(false);
 
- document.getElementById('result').innerText = 'Error: ' + error.message;
+const hoverStyles = {
 
- }}
+backgroundColor: isHovered ? '#e0e0e0' : inlineStyles.backgroundColor,
 
- function convertCsvToJson() {
+};
 
- try {
+const handleMouseEnter = () => setIsHovered(true);
 
- const csvInput = document.getElementById('dataInput').value;
+const handleMouseLeave = () => setIsHovered(false);
 
- const lines = csvInput.split('\n');
+return (
 
- const headers = lines[0].split(',');
+<div
 
- const jsonArray = lines.slice(1).map(line => {
+className="profile-card"
 
- const values = line.split(',');
+style={{ ...inlineStyles, ...hoverStyles }}
 
- return headers.reduce((obj, header, index) => {
-obj[header] = values[index];
+onMouseEnter={handleMouseEnter}
 
- return obj;
+onMouseLeave={handleMouseLeave}
 
- }, {});
+>
 
- });
+<img
 
- document.getElementById('result').innerText = 'Converted JSON:\n' +
+src={profilePicture}
 
-JSON.stringify(jsonArray, null, 2);
+alt="Profile"
 
- } catch (error) {
+className="profile-image"
 
- document.getElementById('result').innerText = 'Error: ' + error.message;
+/>
 
- }
+<h2>{name}</h2>
 
- }
+<p>{bio}</p>
 
- function createHash() {
+</div>
 
- try {
+);
 
- const input = document.getElementById('hashInput').value;
+};
 
- const hash = CryptoJS.SHA256(input);
+export default ProfileCard;
 
- document.getElementById('result').innerText = 'Generated Hash (SHA-256): ' + hash;
+ProfileCard.css
 
- } catch (error) {
+ProfileCard.css.profile-image {
 
- document.getElementById('result').innerText = 'Error: ' + error.message;
+width: 150px;
+height: 150px;
 
- }
+border-radius: 50%;
 
- }
+object-fit: cover;
 
- </script>
+margin-bottom: 15px;
 
-</body>
-
-</html>
-<!--Input to the program:
-
-Convert JSON Text to JavaScript Object*************************
-
-{
-
- "name": "Alice",
-
- "age": 30,
-
- "city": "New York"
+transition: transform 0.3s ease;
 
 }
 
-Convert JSON Results into Date*********************************
+.profile-image:hover {
 
-{
-
- "date": "2024-09-01"
+transform: scale(1.1);
 
 }
 
-Convert JSON to CSV********************************************
+.profile-card {
 
-[
+max-width: 300px;
 
- {"name": "Alice", "age": 30, "city": "New York"},
+margin: 0 auto;
 
- {"name": "Bob", "age": 25, "city": "San Francisco"},
+padding: 20px;
 
- {"name": "Charlie", "age": 35, "city": "Chicago"}
+text-align: center;
 
-]
+background-color: #225f83;
 
-Convert CSV to JSON********************************************
+border-radius: 8px;
 
-name,age,city
+box-shadow: 0 4px 6px rgba(143, 26, 26, 0.1);
 
-Alice,30,New York
+transition: transform 0.3s ease;
 
-Bob,25,San Francisco
+}
 
-Charlie,35,Chicago
+.profile-card:hover {
 
-Create Hash from String****************************************
+transform: translateY(-5px);
 
-vcetputtur-->
+}
+
+h2 {
+
+font-size: 1.5em;
+
+margin: 10px 0;
+
+font-family: 'Arial', sans-serif;
+
+}
+
+p {
+
+font-size: 1em;
+
+color: #555;
+
+font-family: 'Arial', sans-serif;
+
+margin-top: 10px;
+
+}
