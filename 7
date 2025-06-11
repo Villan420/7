@@ -1,195 +1,122 @@
-App.js
+import numpy as np
 
-import React from 'react';
+import pandas as pd
 
-import ProfileCard from './ProfileCard';
+import matplotlib.pyplot as plt
 
-function App() {
+from sklearn.model_selection import train_test_split
 
-return (
+from sklearn.linear_model import LinearRegression
 
-<div className="App">
+from sklearn.preprocessing import PolynomialFeatures
 
-<h1 style={{ textAlign: 'center', marginTop: '20px' }}>User Profile</h1>
+from sklearn.metrics import mean_squared_error,r2_score
 
-<ProfileCard
+import warnings
 
-name="John Doe"
+warnings.filterwarnings("ignore")
 
-bio="A passionate developer with a love for learning and coding."
+def perform_linear_regression(csv_file_path):
 
-profilePicture="https://upload.wikimedia.org/wikipedia/commons/4/45/John_H
+data=pd.read_csv(csv_file_path)
 
-ealey_Official_Cabinet_Portrait%2C_July_2024_%28cropped%29_2.jpg"
+x=data.iloc[:,:-1]
 
-backgroundColor="pink"
+y=data.iloc[:,-1]
 
-/>
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=42)
 
-</div>
+linear_reg=LinearRegression()
 
-);
+linear_reg.fit(x_train,y_train)
 
-}
+linear_reg.fit(x_train,y_train)
 
-export default App;
+y_pred=linear_reg.predict(x_test)
 
-App.css
+mse=mean_squared_error(y_test,y_pred)
 
-.app {
-display: flex;
+r2=r2_score(y_test,y_pred)
 
-justify-content: center;
+print(f"linear Regression-mean squared error:{mse:.2f}")
 
-align-items: center;
+print(f"linear Regression-R-squarred:{r2:.2f}")
 
-height: 100vh;
+plt.figure(figsize=(10,6))
 
-background-color: #f0f0f0;
+plt.scatter(y_test,y_pred,color='blue',label='Predicted vs Actual')
 
-}
+plt.plot([min(y_test),max(y_test)],[min(y_test),max(y_test)],color='red',label='Predict Fit')
 
-ProfileCard.js
+plt.xlabel('Actual values')
 
-import React, { useState } from 'react';
+plt.ylabel('Predicted values')
 
-import './ProfileCard.css'; // Import external CSS file for overall styles
+plt.title('linear Regression-Predicted vs Actual values(BostonHousing)')
 
-const ProfileCard = ({ name, bio, profilePicture, backgroundColor }) => {
+plt.legend()
 
-const inlineStyles = {
+plt.show()
 
-backgroundColor: backgroundColor || '#f0f0f0',
+def perform_polynomial_regression(csv_file_path):
+data=pd.read_csv(csv_file_path)
 
-prop passed
+data=data.dropna(subset=['mpg'])
 
-textAlign: 'center',
+x=data[['horsepower']]
 
-padding: '20px',
+y=data['mpg']
 
-borderRadius: '8px',
+x.loc[:,'horsepower']=pd.to_numeric(x['horsepower'],errors='coerce')
 
-boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+x=x.dropna()
 
-transition: 'background-color 0.3s ease',
+y=y.loc[x.index]
 
-};
+x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2,random_state=42)
 
-const [isHovered, setIsHovered] = useState(false);
+degree=2
 
-const hoverStyles = {
+poly=PolynomialFeatures(degree)
 
-backgroundColor: isHovered ? '#e0e0e0' : inlineStyles.backgroundColor,
+x_train_poly=poly.fit_transform(x_train)
 
-};
+x_test_poly=poly.transform(x_test)
 
-const handleMouseEnter = () => setIsHovered(true);
+linear_reg=LinearRegression()
 
-const handleMouseLeave = () => setIsHovered(false);
+linear_reg.fit(x_train_poly,y_train)
 
-return (
+y_pred=linear_reg.predict(x_test_poly)
 
-<div
+mse=mean_squared_error(y_test,y_pred)
 
-className="profile-card"
+r2=r2_score(y_test,y_pred)
 
-style={{ ...inlineStyles, ...hoverStyles }}
+print(f"polynomial regression=mean squared error:{mse:.2f}")
 
-onMouseEnter={handleMouseEnter}
+print(f"polynomial regression-R-squared:{r2:.2f}")
 
-onMouseLeave={handleMouseLeave}
+plt.scatter(x['horsepower'],y,color='blue',label='Data')
 
->
+x_range=np.linspace(x['horsepower'].min(),x['horsepower'].max(),100).reshape(-1,1)
 
-<img
+x_range_poly=poly.transform(x_range)
 
-src={profilePicture}
+y_range_pred=linear_reg.predict(x_range_poly)
 
-alt="Profile"
+plt.plot(x_range,y_range_pred,color='red',label='polynomial fit')
 
-className="profile-image"
+plt.xlabel('Horsepower')
 
-/>
+plt.ylabel('MPG')
 
-<h2>{name}</h2>
+plt.legend()
 
-<p>{bio}</p>
+plt.title(f'polynomial regression(degree{degree})')
 
-</div>
+plt.show()
 
-);
+perform_linear_regression('BostonHousing.csv')
 
-};
-
-export default ProfileCard;
-
-ProfileCard.css
-
-ProfileCard.css.profile-image {
-
-width: 150px;
-height: 150px;
-
-border-radius: 50%;
-
-object-fit: cover;
-
-margin-bottom: 15px;
-
-transition: transform 0.3s ease;
-
-}
-
-.profile-image:hover {
-
-transform: scale(1.1);
-
-}
-
-.profile-card {
-
-max-width: 300px;
-
-margin: 0 auto;
-
-padding: 20px;
-
-text-align: center;
-
-background-color: #225f83;
-
-border-radius: 8px;
-
-box-shadow: 0 4px 6px rgba(143, 26, 26, 0.1);
-
-transition: transform 0.3s ease;
-
-}
-
-.profile-card:hover {
-
-transform: translateY(-5px);
-
-}
-
-h2 {
-
-font-size: 1.5em;
-
-margin: 10px 0;
-
-font-family: 'Arial', sans-serif;
-
-}
-
-p {
-
-font-size: 1em;
-
-color: #555;
-
-font-family: 'Arial', sans-serif;
-
-margin-top: 10px;
-
-}
+perform_polynomial_regression('auto-mpg.csv')
